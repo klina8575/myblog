@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+
+<main layout:fragment="content" class="main">
+    <section class="pt-5 padding-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+
+                            <h2 class="mb-4">포스트 수정</h2>
+
+                            <form id="postForm" name="postForm" class="contact-form" method="post" action="/update">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- https://getbootstrap.com/docs/4.1/components/forms/#form-controls -->
+                                        <div class="form-group">
+                                            <label for="categoryCode">카테고리</label>
+                                            <select class="form-control" id="categoryCode" name="categoryCode">
+                                                <option value="001" th:selected="${post.categoryCode} == '001'">여행</option>
+                                                <option value="002" th:selected="${post.categoryCode} == '002'">쇼핑</option>
+                                                <option value="003" th:selected="${post.categoryCode} == '003'">인테리어</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="subject">제목</label>
+                                            <input class="form-control form-control-name" name="subject" id="subject"
+                                                   type="text" required th:value="${post.subject}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="editor">글쓰기</label>
+                                            <div id="editor" th:utext="${post.content}"></div>
+                                            <textarea name="content" style="display:none;"></textarea>
+                                        </div>
+
+                                        <input type="hidden" name="postId" th:value="${post.postId}" />
+                                        <input type="hidden" name="pageNum" th:value="${pageNum}" />
+                                        <input type="hidden" name="searchKey" th:value="${searchKey}" />
+                                        <input type="hidden" name="searchValue" th:value="${searchValue}" />
+
+                                        <button class="btn btn-primary solid blank mt-3" type="button" onclick="beforeSubmit(); return false;">
+                                            포스트 수정하기
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<th:block layout:fragment="script">
+    <script th:src="@{plugins/ckeditor5/build/ckeditor.js}"></script>
+
+    <script th:inline="javascript">
+        let myEditor;
+
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckfinder: {
+                    uploadUrl : '/postImgUpload' //이미지 request 주소
+                }
+            })
+            .then(editor => {
+                myEditor = editor; //생성한 에디터 객체
+            })
+            .catch( error => {
+                console.error( error );
+            } );
+
+        function beforeSubmit() {
+            const content = myEditor.getData(); //에디터창에 입력한 데이터 가져오기
+            const f = document.postForm;
+
+            if(f.subject.value == '') {
+                alert('제목을 등록해주세요'); return;
+            }
+
+            if(content == '') {
+                alert('내용을 등록해주세요'); return;
+            }
+
+            f.content.value = content; //textarea에 에디터에 입력한 내용을 넣어준다.
+            f.submit(); //전송
+        }
+    </script>
+</th:block>
+
+</html>

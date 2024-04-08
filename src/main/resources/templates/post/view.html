@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+
+<main layout:fragment="content" class="main">
+    <section class="single-block-wrapper section-padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="single-post">
+                        <div class="post-header mb-5 text-center">
+                            <div class="meta-cat">
+                                <a class="post-category font-extra text-color text-uppercase font-sm letter-spacing-1"
+                                   href="#"></a>
+                            </div>
+                            <h2 class="post-title mt-2" th:text="${post.subject}"></h2>
+
+                            <div class="post-meta">
+                                <span class="text-uppercase font-sm letter-spacing-1 mr-3" th:text="'BY.' + ${post.member.name}"></span>
+                                <span class="text-uppercase font-sm letter-spacing-1" th:text="${post.writeDate}"></span>
+                            </div>
+                        </div>
+                        <div class="post-body">
+                            <!-- th:text => 그냥 문자로 출력, 태그도 문자로 출력 -->
+                            <!-- th:utext => 그냥 문자는 문자 출력, 태그는 태그로 출력 -->
+                            <div class="entry-content" th:utext="${post.content}"></div>
+
+                            <div class="post-tags py-4">
+                                <a href="#">#Health</a>
+                                <a href="#">#Game</a>
+                                <a href="#">#Tour</a>
+                            </div>
+
+
+                            <div class="tags-share-box center-box d-flex text-center justify-content-between border-top border-bottom py-3">
+
+                                <span class="single-comment-o"><i class="fa fa-comment-o"></i>2 comment</span>
+
+                                <div class="list-posts-share" th:if="${session.member_id} == ${post.memberId}">
+                                    <a th:onclick="|location.href='rewrite?postId=@{${post.postId}}&@{${params}}'|" style="cursor:pointer;">수정</a>
+                                    <a onclick="deletePost(); return false;" style="cursor:pointer;">삭제</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comment-area my-5">
+                        <h3 class="mb-4 text-center">2개의 댓글</h3>
+                        <div class="comment-area-box media">
+                            <img alt="" src="images/blog-user-2.jpg" class="img-fluid float-left mr-3 mt-2">
+
+                            <div class="media-body ml-4">
+                                <h4 class="mb-0">Micle harison </h4>
+                                <span class="date-comm font-sm text-capitalize text-color"><i
+                                        class="ti-time mr-2"></i>June 7, 2019 </span>
+
+                                <div class="comment-content mt-3">
+                                    <p>Lorem ipsum dolor sit amet, usu ut perfecto postulant deterruisset, libris causae
+                                        volutpat at est, ius id modus laoreet urbanitas. Mel ei delenit dolores.</p>
+                                </div>
+                                <div class="comment-meta mt-4 mt-lg-0 mt-md-0">
+                                    <a href="#" class="text-underline ">Reply</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comment-area-box media mt-5">
+                            <img alt="" src="images/blog-user-3.jpg" class="mt-2 img-fluid float-left mr-3">
+
+                            <div class="media-body ml-4">
+                                <h4 class="mb-0 ">John Doe </h4>
+                                <span class="date-comm font-sm text-capitalize text-color"><i
+                                        class="ti-time mr-2"></i>June 7, 2019 </span>
+
+                                <div class="comment-content mt-3">
+                                    <p>Some consultants are employed indirectly by the client via a consultancy staffing
+                                        company. </p>
+                                </div>
+                                <div class="comment-meta mt-4 mt-lg-0 mt-md-0">
+                                    <a href="#" class="text-underline">Reply</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="comment-form mb-5 gray-bg p-5" id="comment-form">
+                        <h3 class="mb-4 text-center">댓글 남기기</h3>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <textarea class="form-control mb-3" name="comment" id="comment" cols="30" rows="5"
+                                          placeholder="Comment"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="name" id="name" placeholder="Name:">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="mail" id="mail" placeholder="Email:">
+                                </div>
+                            </div>
+                        </div>
+
+                        <input class="btn btn-primary" type="submit" name="submit-contact" id="submit_contact"
+                               value="등록">
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function deletePost() {
+            const result = confirm("해당 포스트 삭제하시겠습니까?");
+            const url = '/delete/' + [[${post.postId}]] //request URL
+
+            if(result) {
+              $.ajax({
+				url : url,
+				type : "DELETE", //전송방식
+				contentType : "application/json",
+				dataType : "json",
+				cache : false,
+				success : function(result, status) {
+                    console.log("result postId: " + result + ", statusCode: " + status);
+				    location.href = '/list';
+				},
+				error : function(jqXHR, status, error) {
+                    console.log("result: " + jqXHR.responseText + ", statusCode: " + status);
+
+				    //삭제 권한이 없거나 로그인이 풀리면 로그인 페이지로 이동
+				    if(jqXHR.status == '401') { //UNAUTHORIZED
+				        location.href = '/login';
+				    } else {
+				        alert(jqXHR.responseText);
+				    }
+				}
+			  });
+            }
+
+        }
+    </script>
+</th:block>
+
+</html>

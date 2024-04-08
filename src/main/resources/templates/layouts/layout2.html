@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBlog</title>
+
+    <!-- 공통으로 사용할 CSS plugin-->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{plugins/bootstrap/css/bootstrap.min.css}">
+    <!-- Themify -->
+    <link rel="stylesheet" th:href="@{plugins/themify/css/themify-icons.css}">
+    <link rel="stylesheet" th:href="@{plugins/slick-carousel/slick-theme.css}">
+    <link rel="stylesheet" th:href="@{plugins/slick-carousel/slick.css}">
+    <!-- Slick Carousel -->
+    <link rel="stylesheet" th:href="@{plugins/owl-carousel/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{plugins/owl-carousel/owl.theme.default.min.css}">
+    <link rel="stylesheet" th:href="@{plugins/magnific-popup/magnific-popup.css}">
+
+    <!-- 공통으로 사용할 커스터마이징 된 CSS-->
+    <link rel="stylesheet" th:href="@{css/style.css}">
+
+    <!-- 각 페이지의 CSS가 작성될 위치지정 -->
+    <th:block layout:fragment="css"></th:block>
+</head>
+<body>
+    <div th:replace="fragments/header::header"></div>
+
+    <div layout:fragment="content" class="content"></div>
+
+    <div th:replace="fragments/adminFooter::footer"></div>
+
+    <!-- 공통으로 사용할 JS plugin-->
+    <!-- initialize jQuery Library -->
+    <script th:src="@{plugins/jquery/jquery.js}"></script>
+    <!-- Bootstrap jQuery -->
+    <script th:src="@{plugins/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{plugins/bootstrap/js/popper.min.js}"></script>
+    <!-- Owl caeousel -->
+    <script th:src="@{plugins/owl-carousel/owl.carousel.min.js}"></script>
+    <script th:src="@{plugins/slick-carousel/slick.min.js}"></script>
+    <script th:src="@{plugins/magnific-popup/magnific-popup.js}"></script>
+    <!-- Instagram Feed Js -->
+    <script th:src="@{plugins/instafeed-js/instafeed.min.js}"></script>
+    <!-- Google Map -->
+    <script th:src="@{https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw}"></script>
+    <script th:src="@{plugins/google-map/gmap.js}"></script>
+
+    <!-- 공통으로 사용할 커스터마이징 된 JS-->
+    <script th:src="@{js/custom.js}"></script>
+
+    <!-- 각 페이지의 JS가 작성될 위치지정 -->
+    <th:block layout:fragment="script"></th:block>
+</body>
+</html>
